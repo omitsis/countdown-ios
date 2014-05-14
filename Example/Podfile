@@ -1,7 +1,2 @@
-pod "countdown", :path => "../"
-
-target "Demo" do
-end
-
-target "DemoTests" do
-end
+platform :ios
+podspec :path => “../countdown.podspec"
