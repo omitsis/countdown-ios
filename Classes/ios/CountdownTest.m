@@ -1,6 +1,6 @@
 //
 //  TimerLabelTest.m
-//  pruebaOS
+//  Game Clock
 //
 //  Created by Albert on 07/05/14.
 //  Copyright (c) 2014 pruebaOS. All rights reserved.
@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "Countdown.h"
 
-@interface CountdownTest : XCTestCase <CountdownProtocol>
+@interface CountdownTest : XCTestCase <CountdownDelegate>
 {
     int _numberChanged;
     Countdown *_countdownObject;
@@ -25,7 +25,6 @@ static const int DEFAULT_MILLISECONDS = 1200000;
     [super setUp];
     _countdownObject = [[Countdown alloc] initWith:DEFAULT_MILLISECONDS];
     _countdownObject.delegate = self;
-
 }
 
 - (void)tearDown
@@ -34,35 +33,33 @@ static const int DEFAULT_MILLISECONDS = 1200000;
 }
 
 
--(void)testThatCountdownCanBeCreated
+-(void)testCountdownCanBeCreated
 {
-    [_countdownObject start];
     XCTAssertNotNil(_countdownObject, @"CountdownObject can not be created");
 }
 
--(void)testThatCountdownHasNSTimerSetted
+-(void)testCountdownHasNSTimerSetted
 {
-    [_countdownObject start];
     XCTAssertNotNil(_countdownObject.timer, @"Timer is not setted in TimerLabelObject");
 }
 
 
--(void)testThatCountdownTotalTimeDecreases
+-(void)testCountdownTotalTimeDecreases
 {
     int expected = 1199000;
     [_countdownObject timerCycle];
-    XCTAssertTrue(expected == _numberChanged, @"The expected timer value was %i but the real value is %i", expected, _numberChanged);
+    XCTAssertTrue(expected == _countdownObject.totalTime, @"The expected timer value was %i but the real value is %i", expected, _countdownObject.totalTime);
 }
 
--(void)testThatCountdownTotalTimeLowerThan60SecondsStepsInTenths
+-(void)testCountdownTotalTimeLowerThan60SecondsStepsInTenths
 {
     int expected = 59900;
     Countdown *countdownObject = [[Countdown alloc] initWith:60000];
-    [countdownObject start];
+    [countdownObject timerCycle];
     XCTAssertTrue(expected == countdownObject.totalTime, @"The expected value was %i but the real value is %i", expected, countdownObject.totalTime);
 }
 
--(void)testThatCountdownTotalTimeLowerThan61SecondsStepsInTenths
+-(void)testCountdownTotalTimeLowerThan61SecondsStepsInTenths
 {
     int expected = 59900;
     Countdown *countdownObject = [[Countdown alloc] initWith:61000];
@@ -71,7 +68,7 @@ static const int DEFAULT_MILLISECONDS = 1200000;
     XCTAssertTrue(expected == countdownObject.totalTime, @"The expected value was %i but the real value is %i", expected, countdownObject.totalTime);
 }
 
--(void)testThatCountdownStops
+-(void)testCountdownStops
 {
     [_countdownObject start];
     [_countdownObject stop];
@@ -79,13 +76,14 @@ static const int DEFAULT_MILLISECONDS = 1200000;
     XCTAssertTrue(_countdownObject.timer == nil, @"Timer is still running");
 }
 
--(void)testThatCountdownTimerIsStoppedWhenTotalTimeIs0
+-(void)testCountdownTimerIsStoppedWhenTotalTimeIs0
 {
-    [_countdownObject start];
     _countdownObject.totalTime = 0;
     [_countdownObject decrementTotalTimeByTenths];
     XCTAssertTrue(_countdownObject.timer == nil, @"Timer is still running");
 }
+
+#pragma mark - CountdownDelegate
 
 -(void)getTotalTime:(int)number
 {

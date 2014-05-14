@@ -6,14 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CountdownProtocol.h"
+#import "CountdownDelegate.h"
 
 @interface Countdown : NSObject{
     NSTimer *timer;
     int totalTime;
 }
 
-@property (nonatomic,strong) id <CountdownProtocol> delegate;
+@property (nonatomic,strong) id <CountdownDelegate> delegate;
 @property (strong) NSTimer *timer;
 @property (assign) int totalTime;
 

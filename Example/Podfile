@@ -1,2 +1,2 @@
 platform :ios
-podspec :path => “../countdown.podspec"
+podspec :path => "../countdown.podspec"
